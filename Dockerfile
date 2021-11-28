@@ -28,7 +28,7 @@ RUN chmod 644 /opt/wait_to_run.sh && \
     echo 'user    ALL=(ALL)    NOPASSWD:ALL' > /etc/sudoers && \
     chmod u-w /etc/sudoers
 
-ENV PROJECT_PATH='project_not_exist' \
+ENV PROJECT_PATH= \
     RUN_CMD= \
     INIT_FILE= \
     WAIT_SEC=0 \
@@ -41,4 +41,4 @@ VOLUME [ "/home/user" ]
 
 WORKDIR /opt/workspace
 
-CMD sh /opt/wait_to_run.sh /opt/workspace ${PROJECT_PATH} ${WAIT_SEC} ${WAIT_HOST} ${WAIT_PORT}
+CMD sh /opt/wait_to_run.sh /opt/workspace/${PROJECT_PATH} ${WAIT_SEC} ${WAIT_HOST} ${WAIT_PORT}

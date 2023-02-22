@@ -1,10 +1,11 @@
 #!/bin/sh
 
-project_path=$1
+user_name=$1
+project_path=$2
 
 exit_with_usage() {
     echo "Usage:"
-    echo "sh wait_to_run.sh <project_abs_path> [wait_sec] [wait_host <wait_port>]"
+    echo "sh wait_to_run.sh <user_name> <project_abs_path> [wait_sec] [wait_host <wait_port>]"
     echo "accept environment:"
     echo "RUN_CMD: the command to run, if not assigned, 'tail -f /dev/null' by default"
     echo "INIT_FILE: a .sh file in project_path, will execute it before run the RUN_CMD"
@@ -21,7 +22,7 @@ owner=$(stat -c '%U' $project_path)
 
 if [ "$(whoami)" = "root" ]; then
     owner_group=$(stat -c '%G' $project_path)
-    if [ "$owner" != "user" ]; then
+    if [ "$owner" != "$user_name" ]; then
         if [ "$owner" != "UNKNOWN" ]; then
             userdel $owner
         fi
@@ -30,17 +31,17 @@ if [ "$(whoami)" = "root" ]; then
         fi
         owner_uid=$(stat -c '%u' $project_path)
         owner_gid=$(stat -c '%g' $project_path)
-        userdel user
-        groupadd -g $owner_gid user
-        useradd user -u $owner_uid -g $owner_gid -s /bin/bash
-        if [ "$(stat -c '%U' /opt/workspace)" != "user" ]; then
+        userdel $user_name
+        groupadd -g $owner_gid $user_name
+        useradd $user_name -u $owner_uid -g $owner_gid -s /bin/bash
+        if [ "$(stat -c '%U' /opt/workspace)" != "$user_name" ]; then
             chown $owner_uid:$owner_gid /opt/workspace
         fi
-        if [ "$(stat -c '%U' /home/user)" != "user" ]; then
-            chown $owner_uid:$owner_gid /home/user
+        if [ "$(stat -c '%U' /home/$user_name)" != "$user_name" ]; then
+            chown $owner_uid:$owner_gid /home/$user_name
         fi
     fi
-    su user -c "sh $0 $project_path $2 $3 $4"
+    su $user_name -c "sh $0 $project_path $2 $3 $4"
     exit
 fi
 
@@ -51,14 +52,14 @@ if [ "$owner" = "root" ]; then
         echo "the owner of $project_path is root, please use a normal user instead"
         exit
     fi
-elif [ "$owner" != "user" ]; then
+elif [ "$owner" != "$user_name" ]; then
     sudo -E su -c "sh $0 $project_path $2 $3 $4"
     exit
 fi
 
-wait_sec=$2
-wait_host=$3
-wait_port=$4
+wait_sec=$3
+wait_host=$4
+wait_port=$5
 run_cmd=${RUN_CMD}
 init_file=${INIT_FILE}
 

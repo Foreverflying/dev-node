@@ -21,11 +21,11 @@ RUN chmod 644 /opt/wait_to_run.sh && \
         tzdata \
         && \
     apt-get autoclean && \
-    useradd user -m -s /bin/bash && \
+    usermod node -s /bin/bash && \
     mkdir -p /opt/workspace && \
-    chown user:user /opt/workspace && \
+    chown node:node /opt/workspace && \
     chmod u+w /etc/sudoers && \
-    echo 'user    ALL=(ALL)    NOPASSWD:ALL' > /etc/sudoers && \
+    echo 'node    ALL=(ALL)    NOPASSWD:ALL' > /etc/sudoers && \
     chmod u-w /etc/sudoers
 
 ENV PROJECT_PATH= \
@@ -35,10 +35,10 @@ ENV PROJECT_PATH= \
     WAIT_HOST= \
     WAIT_PORT=
 
-USER user
+USER node
 
-VOLUME [ "/home/user" ]
+VOLUME [ "/home/node" ]
 
 WORKDIR /opt/workspace
 
-CMD sh /opt/wait_to_run.sh /opt/workspace/${PROJECT_PATH} ${WAIT_SEC} ${WAIT_HOST} ${WAIT_PORT}
+CMD sh /opt/wait_to_run.sh node /opt/workspace/${PROJECT_PATH} ${WAIT_SEC} ${WAIT_HOST} ${WAIT_PORT}

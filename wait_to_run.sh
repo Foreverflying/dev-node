@@ -41,7 +41,7 @@ if [ "$(whoami)" = "root" ]; then
             chown $owner_uid:$owner_gid /home/$user_name
         fi
     fi
-    su $user_name -c "sh $0 $project_path $2 $3 $4"
+    su $user_name -c "sh $0 $user_name $project_path $3 $4 $5"
     exit
 fi
 
@@ -53,7 +53,7 @@ if [ "$owner" = "root" ]; then
         exit
     fi
 elif [ "$owner" != "$user_name" ]; then
-    sudo -E su -c "sh $0 $project_path $2 $3 $4"
+    sudo -E su -c "sh $0 $user_name $project_path $3 $4 $5"
     exit
 fi
 

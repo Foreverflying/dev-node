@@ -6,7 +6,7 @@ LABEL maintainer="Andy Deng <andy.z.deng@gmail.com>"
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    apt-get install -y \
         lsof \
         netcat \
         net-tools \

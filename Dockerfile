@@ -8,7 +8,6 @@ RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y \
         lsof \
-        netcat \
         net-tools \
         telnet \
         vim \
